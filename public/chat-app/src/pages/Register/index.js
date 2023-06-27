@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { ToastContainer, toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { registerRoute } from "../../utils/APIRoutes";
 import logoImg from "../../assets/logo.svg";
@@ -10,11 +10,6 @@ import "./index.scss";
 const Register = () => {
   const navigate = useNavigate();
   const [values, setValues] = useState({ username: "", email: "", password: "", confirmPassword: "" });
-
-  const handleChange = e => {
-    setValues({ ...values, [e.target.name]: e.target.value });
-  };
-
   const toastOptions = {
     position: "bottom-right",
     autoClose: 3000,
@@ -22,6 +17,17 @@ const Register = () => {
     draggable: true,
     theme: "dark",
   };
+
+  useEffect(() => {
+    if (localStorage.getItem("chat-app-user")) {
+      navigate("/");
+    }
+  }, []);
+
+  const handleChange = e => {
+    setValues({ ...values, [e.target.name]: e.target.value });
+  };
+
   const handleValidation = () => {
     const { username, email, password, confirmPassword } = values;
     if (username.length < 3) {

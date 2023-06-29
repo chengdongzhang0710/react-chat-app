@@ -73,8 +73,8 @@ const Avatar = () => {
           <div className="avatars">
             { avatars.map((item, index) => {
               return (
-                <div className={ selectedAvatar === index ? "avatar selected" : "avatar" }>
-                  <img src={ `data:image/svg+xml;base64,${ item }` } alt="avatar" key={ item }
+                <div className={ selectedAvatar === index ? "avatar selected" : "avatar" } key={ item }>
+                  <img src={ `data:image/svg+xml;base64,${ item }` } alt="avatar"
                        onClick={ () => setSelectedAvatar(index) }/>
                 </div>
               );

@@ -1,4 +1,5 @@
 const bcrypt = require("bcrypt");
+const mongoose = require("mongoose");
 const User = require("../models/userModel");
 
 module.exports.register = async (req, res, next) => {
@@ -16,7 +17,7 @@ module.exports.register = async (req, res, next) => {
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    const user = User.create({ username, email, password: hashedPassword });
+    const user = await User.create({ username, email, password: hashedPassword });
     delete user.password;
     return res.json({ status: true, user });
   } catch (error) {
@@ -51,6 +52,15 @@ module.exports.avatar = async (req, res, next) => {
     const avatarImage = req.body.image;
     const userData = await User.findByIdAndUpdate(userId, { isAvatarImageSet: true, avatarImage }, { new: true });
     return res.json({ isSet: true, image: userData.avatarImage });
+  } catch (error) {
+    next(error);
+  }
+};
+
+module.exports.contacts = async (req, res, next) => {
+  try {
+    const users = await User.find({ _id: { $ne: req.params.id } }).select(["_id", "email", "username", "avatarImage"]);
+    return res.json(users);
   } catch (error) {
     next(error);
   }
